@@ -30,6 +30,7 @@ import org.springframework.lang.Nullable;
  * @author Juergen Hoeller
  * @since 07.07.2003
  * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#setParentBeanFactory
+ * 表示bean之间是有继承关系的，既每个bean可能有父bean
  */
 public interface HierarchicalBeanFactory extends BeanFactory {
 

@@ -44,6 +44,7 @@ import org.springframework.lang.Nullable;
  * @see org.springframework.core.io.FileSystemResource
  * @see org.springframework.core.io.UrlResource
  * @see org.springframework.core.io.ResourceLoader
+ * 常量定义用抽象类，而不是接口？还是因为版本太老了
  */
 public abstract class ResourceUtils {
 

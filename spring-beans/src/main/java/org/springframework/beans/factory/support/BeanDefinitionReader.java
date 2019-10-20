@@ -36,6 +36,7 @@ import org.springframework.lang.Nullable;
  * @author Juergen Hoeller
  * @since 1.1
  * @see org.springframework.core.io.Resource
+ * 定义了spring中对bean的解析过程，bean的解析就是对spring配置文件的解析
  */
 public interface BeanDefinitionReader {
 
