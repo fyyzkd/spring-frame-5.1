@@ -56,6 +56,7 @@ import org.springframework.util.ClassUtils;
  * @see CommonAnnotationBeanPostProcessor
  * @see org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor
  * @see org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor
+ * 处理注解Bean定义类的通用注解
  */
 public abstract class AnnotationConfigUtils {
 
@@ -234,7 +235,9 @@ public abstract class AnnotationConfigUtils {
 		processCommonDefinitionAnnotations(abd, abd.getMetadata());
 	}
 
+	// 处理Bean定义中的通用注解
 	static void processCommonDefinitionAnnotations(AnnotatedBeanDefinition abd, AnnotatedTypeMetadata metadata) {
+		// 如果Bean定义中有@Lazy注解，则将该Bean预实例化属性设置为@Lazy注解的值
 		AnnotationAttributes lazy = attributesFor(metadata, Lazy.class);
 		if (lazy != null) {
 			abd.setLazyInit(lazy.getBoolean("value"));
@@ -246,9 +249,12 @@ public abstract class AnnotationConfigUtils {
 			}
 		}
 
+		// 如果Bean定义中有@Primary注解，则将该注解设置为autowiring自动依赖注入装配的首选对象
 		if (metadata.isAnnotated(Primary.class.getName())) {
 			abd.setPrimary(true);
 		}
+		// 如果Bean定义有@DependsOn注解，则为该Bean设置所依赖的Bean名称
+		// 容器将确保在实例化该Bean之前首先实例化所依赖的的Bean
 		AnnotationAttributes dependsOn = attributesFor(metadata, DependsOn.class);
 		if (dependsOn != null) {
 			abd.setDependsOn(dependsOn.getStringArray("value"));
@@ -264,14 +270,20 @@ public abstract class AnnotationConfigUtils {
 		}
 	}
 
+	// 根据注解Bean定义类中配置的作用域为其设置相应的代理策略：即根据作用域为Bean定义设置相应的代理模式
 	static BeanDefinitionHolder applyScopedProxyMode(
 			ScopeMetadata metadata, BeanDefinitionHolder definition, BeanDefinitionRegistry registry) {
 
+		// 获取注解Bean定义中类@Scope注解的proxyMode属性值
 		ScopedProxyMode scopedProxyMode = metadata.getScopedProxyMode();
+		// 如果proxyMode属性值为No，则不应用代理模式
 		if (scopedProxyMode.equals(ScopedProxyMode.NO)) {
 			return definition;
 		}
+		// 获取配置的@Scope注解的proxyMode属性值，如果为TARGET_CLASS
+		// 则返回true，如果为INTERFACES，则返回false
 		boolean proxyTargetClass = scopedProxyMode.equals(ScopedProxyMode.TARGET_CLASS);
+		// 为注册的Bean创建相应模式的代理对象
 		return ScopedProxyCreator.createScopedProxy(definition, registry, proxyTargetClass);
 	}
 

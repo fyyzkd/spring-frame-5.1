@@ -34,6 +34,7 @@ import org.springframework.util.StringUtils;
  * @since 1.1
  * @see PropertiesBeanDefinitionReader
  * @see org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader
+ * 主要检验BeanDefinition信息，然后将Bean添加到容器中一个管理BeanDefinition的HashMap中
  */
 public abstract class BeanDefinitionReaderUtils {
 
