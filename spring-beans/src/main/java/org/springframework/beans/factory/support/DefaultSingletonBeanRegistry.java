@@ -393,21 +393,43 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * to be destroyed before the given bean is destroyed.
 	 * @param beanName the name of the bean
 	 * @param dependentBeanName the name of the dependent bean
+	 * 为指定的Bean注入依赖的Bean
 	 */
 	public void registerDependentBean(String beanName, String dependentBeanName) {
+		/** 处理Bean名称，将别名转换为规范的Bean名称 **/
 		String canonicalName = canonicalName(beanName);
 
+		/**
+		 * 多线程同步，保证容器内数据的一致性
+		 * 在容器中通过“Bean名称-> 全部依赖的Bean名称集合” 查找指定名称的Bean的依赖Bean
+		 */
 		synchronized (this.dependentBeanMap) {
+			/** 获取指定名称的Bean的全部依赖Bean名称，并为Bean设置依赖Bean信息  **/
 			Set<String> dependentBeans =
 					this.dependentBeanMap.computeIfAbsent(canonicalName, k -> new LinkedHashSet<>(8));
+			/**
+			 * 在向容器中通过“Bean名称-> 全部依赖的Bean名称集合” 添加Bean的依赖信息
+			 * 即，将Bean所依赖的Bean添加到容器的集合中
+			 */
 			if (!dependentBeans.add(dependentBeanName)) {
 				return;
 			}
 		}
 
+		/**
+		 * 多线程同步，保证容器内数据的一致性
+		 * 在容器中通过“Bean名称-> 指定名称Bean的依赖Bean集合” 查找指定名称的Bean的依赖Bean
+		 */
 		synchronized (this.dependenciesForBeanMap) {
+		    /**
+			 * 在容器中通过“Bean名称-> 指定名称Bean的依赖Bean集合” 查找指定名称的Bean的依赖Bean
+			 */
 			Set<String> dependenciesForBean =
-					this.dependenciesForBeanMap.computeIfAbsent(dependentBeanName, k -> new LinkedHashSet<>(8));
+			this.dependenciesForBeanMap.computeIfAbsent(dependentBeanName, k -> new LinkedHashSet<>(8));
+			/**
+			 * 在向容器中通过“Bean名称-> 全部依赖的Bean名称集合” 添加Bean的依赖信息
+			 * 即，将Bean所依赖的Bean添加到容器的集合中
+			 */
 			dependenciesForBean.add(canonicalName);
 		}
 	}

@@ -45,6 +45,8 @@ import org.springframework.util.StringUtils;
  *
  * <p>Uses CGLIB to generate subclasses dynamically if methods need to be
  * overridden by the container to implement <em>Method Injection</em>.
+ * CGLIB是一个常用的字节码生成器的类库，它提供了一系列API实现Java字节码的生成和转换功能，
+ * 如果一个类没有实现任何接口，要对其进行动态代理只能使用CGLib
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
@@ -77,11 +79,19 @@ public class CglibSubclassingInstantiationStrategy extends SimpleInstantiationSt
 		return instantiateWithMethodInjection(bd, beanName, owner, null);
 	}
 
+	 /**
+	  * SimpleInstantiationStrategy的子类，通过CGLib来进行初始化
+	  *
+	  * @Param null:
+	  * @Return: null
+	  * @Date 2019/11/17
+	  */
 	@Override
 	protected Object instantiateWithMethodInjection(RootBeanDefinition bd, @Nullable String beanName, BeanFactory owner,
 			@Nullable Constructor<?> ctor, Object... args) {
 
 		// Must generate CGLIB subclass...
+		/**  利用CGLib进行Bean对象的实例化 **/
 		return new CglibSubclassCreator(bd, owner).instantiate(ctor, args);
 	}
 
@@ -112,8 +122,10 @@ public class CglibSubclassingInstantiationStrategy extends SimpleInstantiationSt
 		 * @param args arguments to use for the constructor.
 		 * Ignored if the {@code ctor} parameter is {@code null}.
 		 * @return new instance of the dynamically generated subclass
+		 * 利用CGLib进行Bean对象的实例化
 		 */
 		public Object instantiate(@Nullable Constructor<?> ctor, Object... args) {
+			/**  创建代理子类 **/
 			Class<?> subclass = createEnhancedSubclass(this.beanDefinition);
 			Object instance;
 			if (ctor == null) {
@@ -143,7 +155,9 @@ public class CglibSubclassingInstantiationStrategy extends SimpleInstantiationSt
 		 * definition, using CGLIB.
 		 */
 		private Class<?> createEnhancedSubclass(RootBeanDefinition beanDefinition) {
+			/**  Enhancer是CGLib中的类 **/
 			Enhancer enhancer = new Enhancer();
+			/**  将Bean本身作为基类 **/
 			enhancer.setSuperclass(beanDefinition.getBeanClass());
 			enhancer.setNamingPolicy(SpringNamingPolicy.INSTANCE);
 			if (this.owner instanceof ConfigurableBeanFactory) {
@@ -152,6 +166,7 @@ public class CglibSubclassingInstantiationStrategy extends SimpleInstantiationSt
 			}
 			enhancer.setCallbackFilter(new MethodOverrideCallbackFilter(beanDefinition));
 			enhancer.setCallbackTypes(CALLBACK_TYPES);
+			/**  使用CGLib的createClass()方法生成实例对象 **/
 			return enhancer.createClass();
 		}
 	}
