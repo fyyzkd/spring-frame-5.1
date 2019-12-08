@@ -38,6 +38,7 @@ import org.springframework.lang.Nullable;
  * A simple but definitive way of working out an advice chain for a Method,
  * given an {@link Advised} object. Always rebuilds each advice chain;
  * caching can be provided by subclasses.
+ * 取得拦截器的过程
  *
  * @author Juergen Hoeller
  * @author Rod Johnson
@@ -47,12 +48,18 @@ import org.springframework.lang.Nullable;
 @SuppressWarnings("serial")
 public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializable {
 
+	/**
+	 * 从提供的配置实例config中获取Advisor列表，遍历处理这些Advisor，
+	 * 如果是IntroductionAdvisor，则判断此Advisor能否应用到目标类targetclass，
+	 * 如果是PointAdvisor，则判断此Advisor能否应用到目标方法targetmethod，将满足条件的Advisor通过advisoradapter转换为拦截器列表返回
+	 */
 	@Override
 	public List<Object> getInterceptorsAndDynamicInterceptionAdvice(
 			Advised config, Method method, @Nullable Class<?> targetClass) {
 
 		// This is somewhat tricky... We have to process introductions first,
 		// but we need to preserve order in the ultimate list.
+		// 实际注册了一系列AdvisorAdapter，用于将Advisor转换为MethodInterceptor
 		AdvisorAdapterRegistry registry = GlobalAdvisorAdapterRegistry.getInstance();
 		Advisor[] advisors = config.getAdvisors();
 		List<Object> interceptorList = new ArrayList<>(advisors.length);
@@ -64,6 +71,7 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 				// Add it conditionally.
 				PointcutAdvisor pointcutAdvisor = (PointcutAdvisor) advisor;
 				if (config.isPreFiltered() || pointcutAdvisor.getPointcut().getClassFilter().matches(actualClass)) {
+					// 检查当前Advisor的切入点是否可以匹配当前方法
 					MethodMatcher mm = pointcutAdvisor.getPointcut().getMethodMatcher();
 					boolean match;
 					if (mm instanceof IntroductionAwareMethodMatcher) {

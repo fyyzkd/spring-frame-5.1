@@ -28,6 +28,7 @@ import org.springframework.aop.support.DefaultPointcutAdvisor;
 
 /**
  * Default implementation of the {@link AdvisorAdapterRegistry} interface.
+ * 来完成各种通知的适配和注册过程
  * Supports {@link org.aopalliance.intercept.MethodInterceptor},
  * {@link org.springframework.aop.MethodBeforeAdvice},
  * {@link org.springframework.aop.AfterReturningAdvice},

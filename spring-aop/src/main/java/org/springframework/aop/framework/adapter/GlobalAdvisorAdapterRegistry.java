@@ -18,6 +18,7 @@ package org.springframework.aop.framework.adapter;
 
 /**
  * Singleton to publish a shared DefaultAdvisorAdapterRegistry instance.
+ * 负责拦截器的适配和注册过程（适配器和单例模式）
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
