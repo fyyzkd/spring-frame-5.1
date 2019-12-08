@@ -845,6 +845,11 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 	 * if view resolution is required.
 	 * @since 4.2
 	 * @see #createInvocableHandlerMethod(HandlerMethod)
+	 * 获取处理请求的方法，执行并返回结果视图
+	 * 最终实现的目的是:完成请求中的参数和方法参数上数据的绑定
+	 * springmvc 提供两种从请求参数到方法参数的绑定
+	 * (1)通过注解的绑定@RequestMapping
+	 * (2)通过参数名称进行绑定
 	 */
 	@Nullable
 	protected ModelAndView invokeHandlerMethod(HttpServletRequest request,

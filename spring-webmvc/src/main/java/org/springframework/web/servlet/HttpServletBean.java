@@ -189,6 +189,7 @@ public abstract class HttpServletBean extends HttpServlet implements Environment
 	 * Subclasses may override this to perform custom initialization.
 	 * All bean properties of this servlet will have been set before this
 	 * method is invoked.
+	 * 真正的初始化操作
 	 * <p>This default implementation is empty.
 	 * @throws ServletException if subclass initialization fails
 	 */

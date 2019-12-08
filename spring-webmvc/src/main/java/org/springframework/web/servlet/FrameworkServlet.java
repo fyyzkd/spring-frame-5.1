@@ -517,7 +517,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	/**
 	 * Overridden method of {@link HttpServletBean}, invoked after any bean properties
 	 * have been set. Creates this servlet's WebApplicationContext.
-	 *
+	 * 初始化IOC容器，最终会调用refresh
 	 */
 	@Override
 	protected final void initServletBean() throws ServletException {
