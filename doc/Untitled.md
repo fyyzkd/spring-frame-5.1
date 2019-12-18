@@ -6,6 +6,7 @@
 	(b)类内部的注解
 		@Autowired、@Value、@Resource以及与EJB、WebService相关的注解
 		![捕获](Untitled.assets/捕获.PNG)
+
 3、管理Bean依赖关系的方式：
 	(a)显式管理：通过BeanDefinition的属性值和构造方法实现Bean依赖关系管理
 	(b)autowiring ：自动装配功能
