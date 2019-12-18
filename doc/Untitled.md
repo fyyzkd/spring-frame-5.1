@@ -13,3 +13,8 @@
 		(1)对Bean的属性调用getBean方法，完成依赖Bean的初始化和依赖注入
 		(2)将依赖Bean的属性引用设置到被依赖的Bean属性上
 		(3)将依赖Bean的名称和被依赖Bean的名称存储在IOC容器的集合中
+
+```java
+import com.demo.edu.cn
+```
+
